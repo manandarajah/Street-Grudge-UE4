@@ -10,3 +10,6 @@ Saved filter=lfs diff=lfs merge=lfs -text
 Config filter=lfs diff=lfs merge=lfs -text
 Binaries filter=lfs diff=lfs merge=lfs -text
 Content filter=lfs diff=lfs merge=lfs -text
+Content/ModularBuildingSet/Overview.umap filter=lfs diff=lfs merge=lfs -text
+Content/ModularBuildingSet/Demo_Scene.umap filter=lfs diff=lfs merge=lfs -text
+*.umap filter=lfs diff=lfs merge=lfs -text
