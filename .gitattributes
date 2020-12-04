@@ -1,0 +1,9 @@
+Scanned3DPeoplePack.png filter=lfs diff=lfs merge=lfs -text
+Source filter=lfs diff=lfs merge=lfs -text
+StreetGrudge.sln filter=lfs diff=lfs merge=lfs -text
+street[[:space:]]grudge[[:space:]]wall[[:space:]]jump[[:space:]]feature[[:space:]]diagram.png filter=lfs diff=lfs merge=lfs -text
+Next[[:space:]]moves.txt filter=lfs diff=lfs merge=lfs -text
+README.md filter=lfs diff=lfs merge=lfs -text
+StreetGrudge.uproject filter=lfs diff=lfs merge=lfs -text
+Intermediate filter=lfs diff=lfs merge=lfs -text
+Saved filter=lfs diff=lfs merge=lfs -text
