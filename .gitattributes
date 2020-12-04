@@ -23,3 +23,13 @@ Content/ProtoCharacters/HeroTPP_Skeleton.uasset filter=lfs diff=lfs merge=lfs -t
 Content/ProtoCharacters/Materials filter=lfs diff=lfs merge=lfs -text
 Content/Scanned3DPeoplePack/RP_Character filter=lfs diff=lfs merge=lfs -text
 Content/Scanned3DPeoplePack/Scenes filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Audio filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Blueprints filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/HDRI filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Maps filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Particles filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Props filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Architecture filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Materials filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Shapes filter=lfs diff=lfs merge=lfs -text
+Content/StarterContent/Textures filter=lfs diff=lfs merge=lfs -text
