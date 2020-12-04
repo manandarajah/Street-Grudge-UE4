@@ -35,3 +35,10 @@ Content/StarterContent/Shapes filter=lfs diff=lfs merge=lfs -text
 Content/StarterContent/Textures filter=lfs diff=lfs merge=lfs -text
 Content/ThirdPersonCPP/Blueprints filter=lfs diff=lfs merge=lfs -text
 Content/ThirdPersonCPP/Maps filter=lfs diff=lfs merge=lfs -text
+Content/VehicleVarietyPack/Meshes filter=lfs diff=lfs merge=lfs -text
+Content/VehicleVarietyPack/Plane.uasset filter=lfs diff=lfs merge=lfs -text
+Content/VehicleVarietyPack/Skeletons filter=lfs diff=lfs merge=lfs -text
+Content/VehicleVarietyPack/Textures filter=lfs diff=lfs merge=lfs -text
+Content/VehicleVarietyPack/Blueprints filter=lfs diff=lfs merge=lfs -text
+Content/VehicleVarietyPack/Maps filter=lfs diff=lfs merge=lfs -text
+Content/VehicleVarietyPack/Materials filter=lfs diff=lfs merge=lfs -text
