@@ -13,3 +13,11 @@ Content filter=lfs diff=lfs merge=lfs -text
 Content/ModularBuildingSet/Overview.umap filter=lfs diff=lfs merge=lfs -text
 Content/ModularBuildingSet/Demo_Scene.umap filter=lfs diff=lfs merge=lfs -text
 *.umap filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/SK_PrototypeF.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/SK_PrototypeF_PhysicsAsset.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/SK_PrototypeM.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/SK_PrototypeM_PhysicsAsset.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/Showcase.umap filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/Textures filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/HeroTPP_Skeleton.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ProtoCharacters/Materials filter=lfs diff=lfs merge=lfs -text
