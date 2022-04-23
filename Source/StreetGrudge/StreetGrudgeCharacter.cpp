@@ -213,7 +213,6 @@ void AStreetGrudgeCharacter::Jump() {
 			GetJumpDirection(ZVelocity);
 
 			//if (RightSideCollide) ZVelocity.Y *= -1;
-			JumpVelocity = ZVelocity.Y;
 
 			if (DoubleJumpMontage != nullptr) PlayAnimMontage(DoubleJumpMontage);
 		}
@@ -283,7 +282,6 @@ void AStreetGrudgeCharacter::Punch() {
 		GetJumpDirection(ZVelocity);
 
 		if (AirPunchMontage != nullptr) PlayAnimMontage(AirPunchMontage);
-		JumpVelocity = ZVelocity.Y;
 
 		LaunchCharacter(ZVelocity, false, true);
 	}
