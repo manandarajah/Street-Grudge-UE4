@@ -14,6 +14,7 @@
 #include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include <Kismet/GameplayStatics.h>
 #include "Public/HandComponent.h"
 
@@ -56,15 +57,18 @@ AStreetGrudgeCharacter::AStreetGrudgeCharacter()
 	RightSide = CreateDefaultSubobject<USceneComponent>(TEXT("Right Side"));
 	RightSide->SetupAttachment(RootComponent);
 
-	LeftHandCollision = CreateDefaultSubobject<UHandComponent>(TEXT("Left Hand Collision"));
-	//LeftHandCollision->AttachToComponent(Cast<USceneComponent>(GetMesh()), FAttachmentTransformRules::SnapToTargetIncludingScale, "LeftHand");
-	LeftHandCollision->SetName("LeftHand");
-	LeftHandCollision->SetupAttachment(RootComponent);
+	//LeftHandCollision = CreateDefaultSubobject<UHandComponent>(TEXT("Left Hand Collision"));
+	////LeftHandCollision->AttachToComponent(Cast<USceneComponent>(GetMesh()), FAttachmentTransformRules::SnapToTargetIncludingScale, "LeftHand");
+	//LeftHandCollision->SetName("LeftHand");
+	//LeftHandCollision->SetupAttachment(RootComponent);
 
-	RightHandCollision = CreateDefaultSubobject<UHandComponent>(TEXT("Right Hand Collision"));
-	//RightHandCollision->AttachToComponent(Cast<USceneComponent>(GetMesh()), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHand");
-	RightHandCollision->SetName("RightHand");
-	RightHandCollision->SetupAttachment(RootComponent);
+	//RightHandCollision = CreateDefaultSubobject<UHandComponent>(TEXT("Right Hand Collision"));
+	////RightHandCollision->AttachToComponent(Cast<USceneComponent>(GetMesh()), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHand");
+	//RightHandCollision->SetName("RightHand");
+	//RightHandCollision->SetupAttachment(RootComponent);
+
+	HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit Box Component"));
+	HitBox->SetupAttachment(RootComponent);
 
 	//OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
 
@@ -125,11 +129,13 @@ void AStreetGrudgeCharacter::BeginPlay() {
 
 	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
-	LeftHandCollision->AttachToComponent(GetMesh(), AttachmentRules, "LeftHandSocket");
-	RightHandCollision->AttachToComponent(GetMesh(), AttachmentRules, "RightHandSocket");
+	/*LeftHandCollision->AttachToComponent(GetMesh(), AttachmentRules, "LeftHandSocket");
+	RightHandCollision->AttachToComponent(GetMesh(), AttachmentRules, "RightHandSocket");*/
 
-	LeftHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
-	RightHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
+	/*LeftHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
+	RightHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);*/
+
+	OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
 }
 
 void AStreetGrudgeCharacter::Tick(float DeltaTime) {
@@ -320,11 +326,11 @@ void AStreetGrudgeCharacter::StopPunch() {
 	CanPunch = false;
 }
 
-void AStreetGrudgeCharacter::PunchHit(UHandComponent* HandComp, AActor* OtherActor) {
+void AStreetGrudgeCharacter::PunchHit(AActor* OverlappedActor, AActor* OtherActor) {
 
-	UE_LOG(LogTemp, Log, TEXT("Can collide with component: %s  actor: %s"), *HandComp->GetHandComponentName(), *OtherActor->GetName());
+	UE_LOG(LogTemp, Log, TEXT("Can collide with component: %s  actor: %s"), *HitBox->GetName(), *OtherActor->GetName());
 
-	if (CanPunch && OtherActor->GetName().Contains("BP_PunchingBag")) {
+	if (CanPunch && OtherActor->GetName().Contains("BP_Enemy")) {
 		UGameplayStatics::ApplyDamage(OtherActor, 5, OtherActor->GetInstigatorController(), this, nullptr);
 	}
 }

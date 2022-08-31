@@ -8,6 +8,7 @@
 
 class UAnimMontage;
 class USceneComponent;
+class UBoxComponent;
 class UHandComponent;
 
 UCLASS(config=Game)
@@ -40,11 +41,14 @@ public:
 	AStreetGrudgeCharacter();
 
 	//Sphere components attached to the hand sockets of player models for punch simulations
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Model, meta = (AllowPrivateAccess = "true"))
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Model, meta = (AllowPrivateAccess = "true"))
 	UHandComponent* LeftHandCollision;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Model, meta = (AllowPrivateAccess = "true"))
-	UHandComponent* RightHandCollision;
+	UHandComponent* RightHandCollision;*/
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Model, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* HitBox;
 
 	//Empty scene components that are used to easily detect a player's side collision with the wall
 	UPROPERTY(VisibleAnywhere, Category = Model, meta = (AllowPrivateAccess = "true"))
@@ -114,7 +118,7 @@ public:
 
 	//Called when player hands are colliding with actor
 	UFUNCTION()
-	void PunchHit(UHandComponent* HandComp, AActor* OtherActor);
+	void PunchHit(AActor* OverlappedActor, AActor* OtherActor);
 
 	//End the punch combos at anypoint depending on player input
 	UFUNCTION(BlueprintCallable, Category = Ability)
