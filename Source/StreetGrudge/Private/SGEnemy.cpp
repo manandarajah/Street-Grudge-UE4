@@ -34,10 +34,16 @@ void ASGEnemy::Tick(float DeltaTime)
 
 	if (EnemyState == SGAIState::Alert) {
 		isMoving = true;
-		
+
 		AICont->MoveToActor(Target, 130);
+
+		if (AICont->GetMoveStatus() == EPathFollowingStatus::Idle) EnemyState = SGAIState::Idle;
+
 		UE_LOG(LogTemp, Log, TEXT("Target: %s"), *Target->GetName());
 	}
+
+	else
+		isMoving = false;
 }
 
 // Called to bind functionality to input
