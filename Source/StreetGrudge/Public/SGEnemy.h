@@ -7,6 +7,7 @@
 #include "SGEnemy.generated.h"
 
 class UPawnSensingComponent;
+class AAIController;
 
 UENUM(BlueprintType)
 enum class SGAIState : uint8 {
@@ -30,12 +31,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComp;
 
-	UFUNCTION()
-	void ChangeState(APawn* SeenPawn);
-
 	SGAIState EnemyState;
 
 	APawn* Target;
+
+	AAIController* AICont;
 
 	bool isMoving = false;
 
@@ -48,4 +48,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Enemy")
 	bool IsMoving();
+
+	UFUNCTION()
+	void ChangeState(APawn* SeenPawn);
 };

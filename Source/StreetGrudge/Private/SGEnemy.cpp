@@ -4,6 +4,7 @@
 #include "SGEnemy.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "AIController.h"
 
 // Sets default values
 ASGEnemy::ASGEnemy()
@@ -22,6 +23,8 @@ void ASGEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AICont = GetWorld()->SpawnActor<AAIController>();
+	AICont->Possess(this);
 }
 
 // Called every frame
@@ -31,7 +34,8 @@ void ASGEnemy::Tick(float DeltaTime)
 
 	if (EnemyState == SGAIState::Alert) {
 		isMoving = true;
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), Target->GetActorLocation() - FVector(200,0,0));
+		
+		AICont->MoveToActor(Target, 130);
 		UE_LOG(LogTemp, Log, TEXT("Target: %s"), *Target->GetName());
 	}
 }
