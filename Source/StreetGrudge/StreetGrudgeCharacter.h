@@ -26,16 +26,18 @@ class AStreetGrudgeCharacter : public ACharacter
 
 private:
 
-	bool CanPunch = false;
+	bool _CanPunch = false;
 
 	//Used to control the number of jumps a player can make, and alter the punch input to simulate an air punch
-	int JumpCount = 0, JumpVelocity = -1;
+	int _JumpCount = 0, _JumpVelocity = -1;
 
 	//Manages player punch combo animations=
-	int Index = -1;
+	int _Index = -1;
+
+	bool _IsEnemyInRange = false;
 
 	//Calculates wall jump direction based on character rotation and left/right collision detection
-	void GetJumpDirection(FVector &Vector);
+	void Internal_GetJumpDirection(FVector &Vector);
 
 public:
 	AStreetGrudgeCharacter();
@@ -118,7 +120,7 @@ public:
 
 	//Called when player hands are colliding with actor
 	UFUNCTION()
-	void PunchHit(AActor* OverlappedActor, AActor* OtherActor);
+	void EnemyInRange(AActor* OverlappedActor, AActor* OtherActor);
 
 	//End the punch combos at anypoint depending on player input
 	UFUNCTION(BlueprintCallable, Category = Ability)
@@ -131,6 +133,11 @@ public:
 	//Called when player is done attacking, called through the end of each attack animation
 	UFUNCTION(BlueprintCallable, Category=Ability)
 	void StopPunch();
+
+	UFUNCTION(BlueprintPure, Category = Ability)
+	int GetPunchIndex();
+
+	bool IsEnemyInRange();
 
 protected:
 

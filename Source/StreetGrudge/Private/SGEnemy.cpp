@@ -5,6 +5,9 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "AIController.h"
+#include "Animation/AnimMontage.h"
+#include "StreetGrudgeCharacter.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 ASGEnemy::ASGEnemy()
@@ -15,7 +18,7 @@ ASGEnemy::ASGEnemy()
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &ASGEnemy::ChangeState);
 
-	EnemyState = SGAIState::Idle;
+	_EnemyState = SGAIState::Idle;
 }
 
 // Called when the game starts or when spawned
@@ -23,8 +26,8 @@ void ASGEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AICont = GetWorld()->SpawnActor<AAIController>();
-	AICont->Possess(this);
+	_AICont = GetWorld()->SpawnActor<AAIController>();
+	_AICont->Possess(this);
 }
 
 // Called every frame
@@ -32,18 +35,18 @@ void ASGEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (EnemyState == SGAIState::Alert) {
-		isMoving = true;
+	if (_EnemyState == SGAIState::Alert) {
+		_isMoving = true;
 
-		AICont->MoveToActor(Target, 130);
+		_AICont->MoveToActor(_Target, 130);
 
-		if (AICont->GetMoveStatus() == EPathFollowingStatus::Idle) EnemyState = SGAIState::Idle;
+		if (_AICont->GetMoveStatus() == EPathFollowingStatus::Idle) _EnemyState = SGAIState::Idle;
 
-		UE_LOG(LogTemp, Log, TEXT("Target: %s"), *Target->GetName());
+		UE_LOG(LogTemp, Log, TEXT("_Target: %s"), *_Target->GetName());
 	}
 
 	else
-		isMoving = false;
+		_isMoving = false;
 }
 
 // Called to bind functionality to input
@@ -54,10 +57,31 @@ void ASGEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 bool ASGEnemy::IsMoving() {
-	return isMoving;
+	return _isMoving;
 }
 
 void ASGEnemy::ChangeState(APawn* SeenPawn) {
-	Target = SeenPawn;
-	EnemyState = SGAIState::Alert;
+	_Target = SeenPawn;
+	_EnemyState = SGAIState::Alert;
+}
+
+void ASGEnemy::ApplyHit(int Index) {
+	
+	if (_SGC->IsEnemyInRange()) {
+
+		switch (Index) {
+		case 2:
+			PlayAnimMontage(SideFaceHit);
+			break;
+		case 3:
+			PlayAnimMontage(RibHit);
+			break;
+		default:
+			PlayAnimMontage(FaceHit);
+		}
+	}
+}
+
+void ASGEnemy::SetSGC(AStreetGrudgeCharacter* SGC) {
+	_SGC = SGC;
 }

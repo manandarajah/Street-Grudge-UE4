@@ -17,6 +17,7 @@
 #include "Components/BoxComponent.h"
 #include <Kismet/GameplayStatics.h>
 #include "Public/HandComponent.h"
+#include "Public/SGEnemy.h"
 
 // AStreetGrudgeCharacter
 
@@ -135,7 +136,7 @@ void AStreetGrudgeCharacter::BeginPlay() {
 	/*LeftHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
 	RightHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);*/
 
-	OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
+	OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::EnemyInRange);
 }
 
 void AStreetGrudgeCharacter::Tick(float DeltaTime) {
@@ -169,11 +170,11 @@ void AStreetGrudgeCharacter::Tick(float DeltaTime) {
 	else if (LeftSideCollide) RightSideCollide = false;
 
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0, FColor::Blue, FString::Printf(TEXT("Right Side Collide: %d\nLeft Side Collide: %d\nJump Velocity: %d"), RightSideCollide,
-		LeftSideCollide, JumpVelocity));
+		LeftSideCollide, _JumpVelocity));
 }
 
 //Calculates wall jump direction based on character rotation and left/right collision detection
-void AStreetGrudgeCharacter::GetJumpDirection(FVector &Vector) {
+void AStreetGrudgeCharacter::Internal_GetJumpDirection(FVector &Vector) {
 
 	//Gets character Yaw value and calculates all 4 player direction ranges
 	float Yaw = GetActorRotation().Yaw, HalfRotation = (DirectionForwardVal + 180) - DirectionRangeVal,
@@ -210,13 +211,13 @@ void AStreetGrudgeCharacter::GetJumpDirection(FVector &Vector) {
 void AStreetGrudgeCharacter::Jump() {
 
 	//Determines weather to jump or wall jump
-	if (JumpCount == 0 || (CanWallJump && JumpCount > 0 && JumpCount < 2)) {
+	if (_JumpCount == 0 || (CanWallJump && _JumpCount > 0 && _JumpCount < 2)) {
 		FVector ZVelocity(0, 0, GetCharacterMovement()->JumpZVelocity);
 
 		//Checks if character is jumping to simulate a wall jump
-		if (JumpCount == 1) {
+		if (_JumpCount == 1) {
 
-			GetJumpDirection(ZVelocity);
+			Internal_GetJumpDirection(ZVelocity);
 
 			//if (RightSideCollide) ZVelocity.Y *= -1;
 
@@ -224,7 +225,7 @@ void AStreetGrudgeCharacter::Jump() {
 		}
 		
 		LaunchCharacter(ZVelocity, false, true);
-		++JumpCount;
+		++_JumpCount;
 	}
 	
 }
@@ -234,7 +235,7 @@ void AStreetGrudgeCharacter::Landed(const FHitResult& Hit) {
 	Super::Landed(Hit);
 
 	CanWallJump = false;
-	JumpCount = 0;
+	_JumpCount = 0;
 }
 
 void AStreetGrudgeCharacter::TurnAtRate(float Rate)
@@ -251,7 +252,7 @@ void AStreetGrudgeCharacter::LookUpAtRate(float Rate)
 
 void AStreetGrudgeCharacter::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f) && !CanPunch)
+	if ((Controller != NULL) && (Value != 0.0f) && !_CanPunch)
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -265,7 +266,7 @@ void AStreetGrudgeCharacter::MoveForward(float Value)
 
 void AStreetGrudgeCharacter::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) && !CanPunch)
+	if ( (Controller != NULL) && (Value != 0.0f) && !_CanPunch)
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -280,67 +281,78 @@ void AStreetGrudgeCharacter::MoveRight(float Value)
 
 //Invoked from the punch input button, decides to simulate punch combos or aerial punch
 void AStreetGrudgeCharacter::Punch() {
-	CanPunch = true;
+	_CanPunch = true;
 	
-	if (CanWallJump && JumpCount > 0 && JumpCount < 2) {
+	if (CanWallJump && _JumpCount > 0 && _JumpCount < 2) {
 		FVector ZVelocity(0, 0, 0);
 
-		GetJumpDirection(ZVelocity);
+		Internal_GetJumpDirection(ZVelocity);
 
 		if (AirPunchMontage != nullptr) PlayAnimMontage(AirPunchMontage);
 
 		LaunchCharacter(ZVelocity, false, true);
 	}
 
-	else if (Index == -1) {
-		++Index;
-		PunchCombo();
-	}
+	else if (_Index == -1) PunchCombo();
 }
 
 //Called when player presses the punch button, handling the punch combo system in case player button mashes
 void AStreetGrudgeCharacter::PunchCombo() {
+	++_Index;
 
 	if (JabMontage == nullptr || CrossMontage == nullptr || HookMontage == nullptr || RoundKickMontage == nullptr) return;
 
-	switch (Index) {
-		case 0:
-			PlayAnimMontage(JabMontage, 1.3f);
-			break;
-		case 1:
-			PlayAnimMontage(CrossMontage, 1.3f);
-			break;
-		case 2:
-			PlayAnimMontage(HookMontage, 1.3f);
-			break;
-		case 3:
-			PlayAnimMontage(RoundKickMontage, 1.3f);
-			break;
+	switch (_Index) {
+	case 0:
+		PlayAnimMontage(JabMontage, 1.3f);
+		break;
+	case 1:
+		PlayAnimMontage(CrossMontage, 1.3f);
+		break;
+	case 2:
+		PlayAnimMontage(HookMontage, 1.3f);
+		break;
+	case 3:
+		PlayAnimMontage(RoundKickMontage, 1.3f);
+		break;
 	}
-
-	++Index;
 }
 
 //Called when player is done attacking, called through the end of each attack animation
 void AStreetGrudgeCharacter::StopPunch() {
-	CanPunch = false;
+	_CanPunch = false;
 }
 
-void AStreetGrudgeCharacter::PunchHit(AActor* OverlappedActor, AActor* OtherActor) {
+void AStreetGrudgeCharacter::EnemyInRange(AActor* OverlappedActor, AActor* OtherActor) {
 
-	UE_LOG(LogTemp, Log, TEXT("Can collide with component: %s  actor: %s"), *HitBox->GetName(), *OtherActor->GetName());
+	UE_LOG(LogTemp, Log, TEXT("Can collide with component: %s  actor: %s can punch: %d object is an enemy: %d"), *HitBox->GetName(), *OtherActor->GetName(), _CanPunch, OtherActor->GetName().Contains("BP_Enemy"));
 
-	if (CanPunch && OtherActor->GetName().Contains("BP_Enemy")) {
+	if (OtherActor->GetName().Contains("BP_Enemy")) {
 		UGameplayStatics::ApplyDamage(OtherActor, 5, OtherActor->GetInstigatorController(), this, nullptr);
+		ASGEnemy* SGEnemy = dynamic_cast<ASGEnemy*>(OtherActor);
+
+		if (SGEnemy) SGEnemy->SetSGC(this);
+		_IsEnemyInRange = true;
 	}
+
+	else
+		_IsEnemyInRange = false;
+}
+
+bool AStreetGrudgeCharacter::IsEnemyInRange() {
+	return _IsEnemyInRange;
 }
 
 //End the punch combos at anypoint depending on player input
 void AStreetGrudgeCharacter::EndPunch() {
-	Index = -1;
+	_Index = -1;
 }
 
 //Checks weather player is attacking or not, rendering it unable to move if true
 bool AStreetGrudgeCharacter::IsPunching() {
-	return CanPunch;
+	return _CanPunch;
+}
+
+int AStreetGrudgeCharacter::GetPunchIndex() {
+	return _Index;
 }

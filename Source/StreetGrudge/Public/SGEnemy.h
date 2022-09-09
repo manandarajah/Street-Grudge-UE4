@@ -8,6 +8,8 @@
 
 class UPawnSensingComponent;
 class AAIController;
+class UAnimMontage;
+class AStreetGrudgeCharacter;
 
 UENUM(BlueprintType)
 enum class SGAIState : uint8 {
@@ -31,15 +33,28 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComp;
 
-	SGAIState EnemyState;
+private:
+	SGAIState _EnemyState;
 
-	APawn* Target;
+	APawn* _Target;
 
-	AAIController* AICont;
+	AAIController* _AICont;
 
-	bool isMoving = false;
+	bool _isMoving = false;
 
-public:	
+	AStreetGrudgeCharacter* _SGC;
+
+public:
+
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+	UAnimMontage* FaceHit;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+	UAnimMontage* SideFaceHit;
+
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+	UAnimMontage* RibHit;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -51,4 +66,9 @@ public:
 
 	UFUNCTION()
 	void ChangeState(APawn* SeenPawn);
+
+	void SetSGC(AStreetGrudgeCharacter* SGC);
+
+	UFUNCTION(BlueprintCallable, Category="Enemy")
+	void ApplyHit(int Index);
 };
