@@ -40,7 +40,7 @@ private:
 
 	AAIController* _AICont;
 
-	bool _isMoving = false;
+	bool _IsMoving = false;
 
 	AStreetGrudgeCharacter* _SGC;
 

@@ -44,7 +44,7 @@ void ASGEnemy::Internal_SetAIConfig() {
 
 void ASGEnemy::Internal_MoveEnemy() {
 	if (_EnemyState == SGAIState::Alert) {
-		_isMoving = true;
+		_IsMoving = true;
 
 		_AICont->MoveToActor(_Target, 130);
 
@@ -54,7 +54,7 @@ void ASGEnemy::Internal_MoveEnemy() {
 	}
 
 	else
-		_isMoving = false;
+		_IsMoving = false;
 }
 
 // Called to bind functionality to input
@@ -65,7 +65,7 @@ void ASGEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 bool ASGEnemy::IsMoving() {
-	return _isMoving;
+	return _IsMoving;
 }
 
 void ASGEnemy::ChangeState(APawn* SeenPawn) {
