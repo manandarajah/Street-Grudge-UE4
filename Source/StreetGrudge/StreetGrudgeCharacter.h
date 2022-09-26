@@ -39,6 +39,12 @@ private:
 	//Calculates wall jump direction based on character rotation and left/right collision detection
 	void Internal_GetJumpDirection(FVector &Vector);
 
+	void Internal_DetectSideCollision();
+
+	void Internal_SetLeftRightSideRaycast(FHitResult& Hit);
+
+	void Internal_ResetLeftRightSideCollision(FHitResult& Hit);
+
 public:
 	AStreetGrudgeCharacter();
 
@@ -77,7 +83,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
 	UAnimMontage* DoubleJumpMontage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
 	UAnimMontage* AirPunchMontage;
 
 	//Attack animations

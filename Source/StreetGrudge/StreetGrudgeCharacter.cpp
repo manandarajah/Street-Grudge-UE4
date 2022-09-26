@@ -142,35 +142,49 @@ void AStreetGrudgeCharacter::BeginPlay() {
 void AStreetGrudgeCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+	Internal_DetectSideCollision();
+}
+
+//Checks raycats between the player's left and right side to the wall. If true, it will enable the wall jump & arieal punch options
+void AStreetGrudgeCharacter::Internal_DetectSideCollision() {
 	FHitResult Hit;
+	
+	Internal_SetLeftRightSideRaycast(Hit);
+	Internal_ResetLeftRightSideCollision(Hit);
+
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0, FColor::Blue, FString::Printf(TEXT("Right Side Collide: %d\nLeft Side Collide: %d\nJump Velocity: %d"), RightSideCollide,
+		LeftSideCollide, _JumpVelocity));
+}
+
+//Set left side/right side collision
+void AStreetGrudgeCharacter::Internal_SetLeftRightSideRaycast(FHitResult& Hit) {
 	int RaycastLength = 100;
 	FVector Start = RightSide->GetComponentLocation();
 
 	//Gets raycast trace from a player's right side, determining if right side is colliding with wall or not
-	RightSideCollide = GetWorld()->LineTraceSingleByChannel(Hit, Start, Start + (GetActorRightVector() * RaycastLength), 
+	RightSideCollide = GetWorld()->LineTraceSingleByChannel(Hit, Start, Start + (GetActorRightVector() * RaycastLength),
 		ECollisionChannel::ECC_WorldStatic, FCollisionQueryParams::DefaultQueryParam);
-	
+
 	//DrawDebugLine(GetWorld(), Start, Start + (GetActorRightVector() * RaycastLength), FColor::Green, false, 1, 0, 5);
-	
+
 	Start = LeftSide->GetComponentLocation();
 
 	//Gets raycast trace from a player's left side, determining if right side is colliding with wall or not
-	LeftSideCollide = GetWorld()->LineTraceSingleByChannel(Hit, Start, Start + (GetActorRightVector() * -RaycastLength), 
+	LeftSideCollide = GetWorld()->LineTraceSingleByChannel(Hit, Start, Start + (GetActorRightVector() * -RaycastLength),
 		ECollisionChannel::ECC_WorldStatic, FCollisionQueryParams::DefaultQueryParam);
-	
-	//DrawDebugLine(GetWorld(), Start, Start + (GetActorRightVector() * -RaycastLength), FColor::Red, false, 1, 0, 5);
 
-	/*Resets collision configurations if collision raycast is pointing to main character, else if right side it colliding with a wall, then left side 
-		automatically defaults to false*/
+	//DrawDebugLine(GetWorld(), Start, Start + (GetActorRightVector() * -RaycastLength), FColor::Red, false, 1, 0, 5);
+}
+
+/*Resets collision configurations if collision raycast is pointing to main character, else if right side it colliding with a wall, then left side
+	automatically defaults to false*/
+void AStreetGrudgeCharacter::Internal_ResetLeftRightSideCollision(FHitResult& Hit) {
 	if (Hit.GetActor() != NULL && Hit.GetActor()->GetName().Contains("Character")) {
 		LeftSideCollide = false;
 		RightSideCollide = false;
 	}
 	else if (RightSideCollide) LeftSideCollide = false;
 	else if (LeftSideCollide) RightSideCollide = false;
-
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0, FColor::Blue, FString::Printf(TEXT("Right Side Collide: %d\nLeft Side Collide: %d\nJump Velocity: %d"), RightSideCollide,
-		LeftSideCollide, _JumpVelocity));
 }
 
 //Calculates wall jump direction based on character rotation and left/right collision detection
