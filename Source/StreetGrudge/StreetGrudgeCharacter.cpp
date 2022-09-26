@@ -334,12 +334,7 @@ void AStreetGrudgeCharacter::Internal_EnemyInRangeHandler(AActor* OtherActor, bo
 
 	ASGEnemy* SGEnemy = dynamic_cast<ASGEnemy*>(OtherActor);
 
-	if (SGEnemy) {
-		if (IsEnemyInRange)
-			SGEnemy->InPlayerRange();
-		else
-			SGEnemy->OutPlayerRange();
-	}
+	if (SGEnemy) SGEnemy->SetInPlayerRange(IsEnemyInRange);
 }
 
 void AStreetGrudgeCharacter::EnemyInRange(AActor* OverlappedActor, AActor* OtherActor) {

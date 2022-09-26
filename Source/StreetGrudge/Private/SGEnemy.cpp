@@ -90,10 +90,6 @@ void ASGEnemy::ApplyHit(int Index) {
 	}
 }
 
-void ASGEnemy::InPlayerRange() {
-	_IsInPlayerRange = true;
-}
-
-void ASGEnemy::OutPlayerRange() {
-	_IsInPlayerRange = false;
+void ASGEnemy::SetInPlayerRange(bool InPlayerRange) {
+	_IsInPlayerRange = InPlayerRange;
 }

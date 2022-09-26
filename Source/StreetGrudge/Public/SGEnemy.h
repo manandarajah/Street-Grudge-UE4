@@ -68,9 +68,7 @@ public:
 	UFUNCTION()
 	void ChangeState(APawn* SeenPawn);
 
-	void InPlayerRange();
-
-	void OutPlayerRange();
+	void SetInPlayerRange(bool InPlayerRange);
 
 	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void ApplyHit(int Index);
