@@ -145,7 +145,6 @@ void AStreetGrudgeCharacter::Tick(float DeltaTime) {
 	Internal_DetectSideCollision();
 }
 
-//Checks raycats between the player's left and right side to the wall. If true, it will enable the wall jump & arieal punch options
 void AStreetGrudgeCharacter::Internal_DetectSideCollision() {
 	FHitResult Hit;
 	
@@ -156,7 +155,6 @@ void AStreetGrudgeCharacter::Internal_DetectSideCollision() {
 		LeftSideCollide, _JumpVelocity));
 }
 
-//Set left side/right side collision
 void AStreetGrudgeCharacter::Internal_SetLeftRightSideRaycast(FHitResult& Hit) {
 	int RaycastLength = 100;
 	FVector Start = RightSide->GetComponentLocation();
@@ -176,8 +174,6 @@ void AStreetGrudgeCharacter::Internal_SetLeftRightSideRaycast(FHitResult& Hit) {
 	//DrawDebugLine(GetWorld(), Start, Start + (GetActorRightVector() * -RaycastLength), FColor::Red, false, 1, 0, 5);
 }
 
-/*Resets collision configurations if collision raycast is pointing to main character, else if right side it colliding with a wall, then left side
-	automatically defaults to false*/
 void AStreetGrudgeCharacter::Internal_ResetLeftRightSideCollision(FHitResult& Hit) {
 	if (Hit.GetActor() != NULL && Hit.GetActor()->GetName().Contains("Character")) {
 		LeftSideCollide = false;

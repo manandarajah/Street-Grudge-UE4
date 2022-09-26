@@ -46,13 +46,13 @@ private:
 
 public:
 
-	UPROPERTY(EditAnywhere, Category = "Enemy")
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	UAnimMontage* FaceHit;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy")
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	UAnimMontage* SideFaceHit;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy")
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	UAnimMontage* RibHit;
 
 	// Called every frame

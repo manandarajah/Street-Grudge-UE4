@@ -31,7 +31,7 @@ private:
 	//Used to control the number of jumps a player can make, and alter the punch input to simulate an air punch
 	int _JumpCount = 0, _JumpVelocity = -1;
 
-	//Manages player punch combo animations=
+	//Manages player punch combo animations
 	int _Index = -1;
 
 	bool _IsEnemyInRange = false;
@@ -39,10 +39,14 @@ private:
 	//Calculates wall jump direction based on character rotation and left/right collision detection
 	void Internal_GetJumpDirection(FVector &Vector);
 
+	//Checks raycats between the player's left and right side to the wall. If true, it will enable the wall jump & arieal punch options
 	void Internal_DetectSideCollision();
 
+	//Set left side/right side collision
 	void Internal_SetLeftRightSideRaycast(FHitResult& Hit);
 
+	/*Resets collision configurations if collision raycast is pointing to main character, else if right side it colliding with a wall, then left side
+	automatically defaults to false*/
 	void Internal_ResetLeftRightSideCollision(FHitResult& Hit);
 
 public:
