@@ -128,21 +128,17 @@ void AStreetGrudgeCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector
 void AStreetGrudgeCharacter::BeginPlay() {
 	Super::BeginPlay();
 
-	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
-
-	/*LeftHandCollision->AttachToComponent(GetMesh(), AttachmentRules, "LeftHandSocket");
-	RightHandCollision->AttachToComponent(GetMesh(), AttachmentRules, "RightHandSocket");*/
-
-	/*LeftHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
-	RightHandCollision->OnHandCollide.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);*/
-
-	OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::EnemyInRange);
+	Internal_SetPlayerEventHandlers();
 }
 
 void AStreetGrudgeCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 	Internal_DetectSideCollision();
+}
+
+void AStreetGrudgeCharacter::Internal_SetPlayerEventHandlers() {
+	OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::EnemyInRange);
 }
 
 void AStreetGrudgeCharacter::Internal_DetectSideCollision() {

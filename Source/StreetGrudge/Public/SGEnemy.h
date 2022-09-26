@@ -44,6 +44,9 @@ private:
 
 	AStreetGrudgeCharacter* _SGC;
 
+	void Internal_SetAIConfig();
+	void Internal_MoveEnemy();
+
 public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Enemy")

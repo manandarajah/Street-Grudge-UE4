@@ -26,8 +26,7 @@ void ASGEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_AICont = GetWorld()->SpawnActor<AAIController>();
-	_AICont->Possess(this);
+	Internal_SetAIConfig();
 }
 
 // Called every frame
@@ -35,6 +34,15 @@ void ASGEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	Internal_MoveEnemy();
+}
+
+void ASGEnemy::Internal_SetAIConfig() {
+	_AICont = GetWorld()->SpawnActor<AAIController>();
+	_AICont->Possess(this);
+}
+
+void ASGEnemy::Internal_MoveEnemy() {
 	if (_EnemyState == SGAIState::Alert) {
 		_isMoving = true;
 

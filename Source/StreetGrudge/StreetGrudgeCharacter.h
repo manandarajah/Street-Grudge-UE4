@@ -49,6 +49,9 @@ private:
 	automatically defaults to false*/
 	void Internal_ResetLeftRightSideCollision(FHitResult& Hit);
 
+	//Configs handler for the main character
+	void Internal_SetPlayerEventHandlers();
+
 public:
 	AStreetGrudgeCharacter();
 
