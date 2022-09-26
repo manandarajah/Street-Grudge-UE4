@@ -75,7 +75,7 @@ void ASGEnemy::ChangeState(APawn* SeenPawn) {
 
 void ASGEnemy::ApplyHit(int Index) {
 	
-	if (_SGC->IsEnemyInRange()) {
+	if (_IsInPlayerRange) {
 
 		switch (Index) {
 		case 2:
@@ -90,6 +90,10 @@ void ASGEnemy::ApplyHit(int Index) {
 	}
 }
 
-void ASGEnemy::SetSGC(AStreetGrudgeCharacter* SGC) {
-	_SGC = SGC;
+void ASGEnemy::InPlayerRange() {
+	_IsInPlayerRange = true;
+}
+
+void ASGEnemy::OutPlayerRange() {
+	_IsInPlayerRange = false;
 }

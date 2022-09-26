@@ -34,8 +34,6 @@ private:
 	//Manages player punch combo animations
 	int _Index = -1;
 
-	bool _IsEnemyInRange = false;
-
 	//Calculates wall jump direction based on character rotation and left/right collision detection
 	void Internal_GetJumpDirection(FVector &Vector);
 
@@ -51,6 +49,9 @@ private:
 
 	//Configs handler for the main character
 	void Internal_SetPlayerEventHandlers();
+
+	//Handles the internal task of enemy being in player's range.
+	void Internal_EnemyInRangeHandler(AActor* OtherActor, bool IsEnemyInRange);
 
 public:
 	AStreetGrudgeCharacter();
@@ -135,6 +136,9 @@ public:
 	UFUNCTION()
 	void EnemyInRange(AActor* OverlappedActor, AActor* OtherActor);
 
+	UFUNCTION()
+	void EnemyOutOfRange(AActor* OverlappedActor, AActor* OtherActor);
+
 	//End the punch combos at anypoint depending on player input
 	UFUNCTION(BlueprintCallable, Category = Ability)
 	void EndPunch();
@@ -149,8 +153,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = Ability)
 	int GetPunchIndex();
-
-	bool IsEnemyInRange();
 
 protected:
 

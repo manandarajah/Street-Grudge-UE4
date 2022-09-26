@@ -139,6 +139,7 @@ void AStreetGrudgeCharacter::Tick(float DeltaTime) {
 
 void AStreetGrudgeCharacter::Internal_SetPlayerEventHandlers() {
 	OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::EnemyInRange);
+	OnActorEndOverlap.AddDynamic(this, &AStreetGrudgeCharacter::EnemyOutOfRange);
 }
 
 void AStreetGrudgeCharacter::Internal_DetectSideCollision() {
@@ -329,24 +330,32 @@ void AStreetGrudgeCharacter::StopPunch() {
 	_CanPunch = false;
 }
 
+void AStreetGrudgeCharacter::Internal_EnemyInRangeHandler(AActor* OtherActor, bool IsEnemyInRange) {
+
+	ASGEnemy* SGEnemy = dynamic_cast<ASGEnemy*>(OtherActor);
+
+	if (SGEnemy) {
+		if (IsEnemyInRange)
+			SGEnemy->InPlayerRange();
+		else
+			SGEnemy->OutPlayerRange();
+	}
+}
+
 void AStreetGrudgeCharacter::EnemyInRange(AActor* OverlappedActor, AActor* OtherActor) {
 
 	UE_LOG(LogTemp, Log, TEXT("Can collide with component: %s  actor: %s can punch: %d object is an enemy: %d"), *HitBox->GetName(), *OtherActor->GetName(), _CanPunch, OtherActor->GetName().Contains("BP_Enemy"));
 
 	if (OtherActor->GetName().Contains("BP_Enemy")) {
 		UGameplayStatics::ApplyDamage(OtherActor, 5, OtherActor->GetInstigatorController(), this, nullptr);
-		ASGEnemy* SGEnemy = dynamic_cast<ASGEnemy*>(OtherActor);
-
-		if (SGEnemy) SGEnemy->SetSGC(this);
-		_IsEnemyInRange = true;
+		Internal_EnemyInRangeHandler(OtherActor, true);
 	}
-
-	else
-		_IsEnemyInRange = false;
 }
 
-bool AStreetGrudgeCharacter::IsEnemyInRange() {
-	return _IsEnemyInRange;
+void AStreetGrudgeCharacter::EnemyOutOfRange(AActor* OverlappedActor, AActor* OtherActor) {
+
+	if (OtherActor->GetName().Contains("BP_Enemy"))
+		Internal_EnemyInRangeHandler(OtherActor, false);
 }
 
 //End the punch combos at anypoint depending on player input

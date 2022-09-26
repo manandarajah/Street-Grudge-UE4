@@ -40,9 +40,7 @@ private:
 
 	AAIController* _AICont;
 
-	bool _IsMoving = false;
-
-	AStreetGrudgeCharacter* _SGC;
+	bool _IsMoving = false, _IsInPlayerRange = false;
 
 	void Internal_SetAIConfig();
 	void Internal_MoveEnemy();
@@ -70,7 +68,9 @@ public:
 	UFUNCTION()
 	void ChangeState(APawn* SeenPawn);
 
-	void SetSGC(AStreetGrudgeCharacter* SGC);
+	void InPlayerRange();
+
+	void OutPlayerRange();
 
 	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void ApplyHit(int Index);
