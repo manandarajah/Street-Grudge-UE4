@@ -53,6 +53,9 @@ private:
 	//Handles the internal task of enemy being in player's range.
 	void Internal_EnemyInRangeHandler(AActor* OtherActor, bool IsEnemyInRange);
 
+	//Updates original rotation value to reset character rotation after aerial jump animation is done playing
+	void Internal_UpdateRotation();
+
 public:
 	AStreetGrudgeCharacter();
 
@@ -87,11 +90,14 @@ public:
 	UPROPERTY(EditAnywhere, Category=Ability)
 	float JumpBounceValue;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Ability)
+	FRotator OriginalRotation;
+
 	//Used to alter between original and mirrored animations
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
 	UAnimMontage* DoubleJumpMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
 	UAnimMontage* AirPunchMontage;
 
 	//Attack animations

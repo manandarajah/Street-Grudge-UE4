@@ -172,12 +172,35 @@ void AStreetGrudgeCharacter::Internal_SetLeftRightSideRaycast(FHitResult& Hit) {
 }
 
 void AStreetGrudgeCharacter::Internal_ResetLeftRightSideCollision(FHitResult& Hit) {
-	if (Hit.GetActor() != NULL && Hit.GetActor()->GetName().Contains("Character")) {
+	if (Hit.GetActor() != nullptr && Hit.GetActor()->GetName().Contains("Character")) {
 		LeftSideCollide = false;
 		RightSideCollide = false;
 	}
 	else if (RightSideCollide) LeftSideCollide = false;
 	else if (LeftSideCollide) RightSideCollide = false;
+}
+
+//Override unreal jump function to simulate normal jump and to allow an interrupt so jump can
+void AStreetGrudgeCharacter::Jump() {
+
+	//Determines weather to jump or wall jump
+	if (_JumpCount == 0 || (CanWallJump && _JumpCount > 0 && _JumpCount < 2)) {
+		FVector ZVelocity(0, 0, GetCharacterMovement()->JumpZVelocity);
+
+		//Checks if character is jumping to simulate a wall jump
+		if (_JumpCount == 1) {
+
+			Internal_GetJumpDirection(ZVelocity);
+
+			//if (RightSideCollide) ZVelocity.Y *= -1;
+
+			if (DoubleJumpMontage != nullptr) PlayAnimMontage(DoubleJumpMontage);
+		}
+
+		LaunchCharacter(ZVelocity, false, true);
+		++_JumpCount;
+	}
+
 }
 
 //Calculates wall jump direction based on character rotation and left/right collision detection
@@ -212,29 +235,6 @@ void AStreetGrudgeCharacter::Internal_GetJumpDirection(FVector &Vector) {
 
 		Vector.X = JumpBounceValue;
 	}
-}
-
-//Override unreal jump function to simulate normal jump and to allow an interrupt so jump can
-void AStreetGrudgeCharacter::Jump() {
-
-	//Determines weather to jump or wall jump
-	if (_JumpCount == 0 || (CanWallJump && _JumpCount > 0 && _JumpCount < 2)) {
-		FVector ZVelocity(0, 0, GetCharacterMovement()->JumpZVelocity);
-
-		//Checks if character is jumping to simulate a wall jump
-		if (_JumpCount == 1) {
-
-			Internal_GetJumpDirection(ZVelocity);
-
-			//if (RightSideCollide) ZVelocity.Y *= -1;
-
-			if (DoubleJumpMontage != nullptr) PlayAnimMontage(DoubleJumpMontage);
-		}
-		
-		LaunchCharacter(ZVelocity, false, true);
-		++_JumpCount;
-	}
-	
 }
 
 //Resets jump configurations when player hits the ground
@@ -291,6 +291,8 @@ void AStreetGrudgeCharacter::Punch() {
 	_CanPunch = true;
 	
 	if (CanWallJump && _JumpCount > 0 && _JumpCount < 2) {
+		Internal_UpdateRotation();
+
 		FVector ZVelocity(0, 0, 0);
 
 		Internal_GetJumpDirection(ZVelocity);
@@ -301,6 +303,12 @@ void AStreetGrudgeCharacter::Punch() {
 	}
 
 	else if (_Index == -1) PunchCombo();
+}
+
+void AStreetGrudgeCharacter::Internal_UpdateRotation() {
+	OriginalRotation.Pitch = GetActorRotation().Pitch;
+	OriginalRotation.Yaw = GetActorRotation().Yaw;
+	OriginalRotation.Roll = GetActorRotation().Roll;
 }
 
 //Called when player presses the punch button, handling the punch combo system in case player button mashes
@@ -339,9 +347,9 @@ void AStreetGrudgeCharacter::Internal_EnemyInRangeHandler(AActor* OtherActor, bo
 
 void AStreetGrudgeCharacter::EnemyInRange(AActor* OverlappedActor, AActor* OtherActor) {
 
-	UE_LOG(LogTemp, Log, TEXT("Can collide with component: %s  actor: %s can punch: %d object is an enemy: %d"), *HitBox->GetName(), *OtherActor->GetName(), _CanPunch, OtherActor->GetName().Contains("BP_Enemy"));
+	//UE_LOG(LogTemp, Log, TEXT("Can collide with component: %s  actor: %s can punch: %d object is an enemy: %d"), *HitBox->GetName(), *OtherActor->GetName(), _CanPunch, OtherActor->GetName().Contains("BP_Enemy"));
 
-	if (OtherActor->GetName().Contains("BP_Enemy")) {
+	if (OtherActor != nullptr && OtherActor->GetName().Contains("BP_Enemy")) {
 		UGameplayStatics::ApplyDamage(OtherActor, 5, OtherActor->GetInstigatorController(), this, nullptr);
 		Internal_EnemyInRangeHandler(OtherActor, true);
 	}
@@ -349,7 +357,7 @@ void AStreetGrudgeCharacter::EnemyInRange(AActor* OverlappedActor, AActor* Other
 
 void AStreetGrudgeCharacter::EnemyOutOfRange(AActor* OverlappedActor, AActor* OtherActor) {
 
-	if (OtherActor->GetName().Contains("BP_Enemy"))
+	if (OtherActor != nullptr && OtherActor->GetName().Contains("BP_Enemy"))
 		Internal_EnemyInRangeHandler(OtherActor, false);
 }
 
