@@ -56,6 +56,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	UAnimMontage* RibHit;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enemy")
+	UAnimMontage* AerialHit;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -71,5 +74,5 @@ public:
 	void SetInPlayerRange(bool InPlayerRange);
 
 	UFUNCTION(BlueprintCallable, Category="Enemy")
-	void ApplyHit(int Index);
+	void ApplyHit(int Index, bool IsInAir);
 };

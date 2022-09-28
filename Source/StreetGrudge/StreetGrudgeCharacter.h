@@ -56,6 +56,15 @@ private:
 	//Updates original rotation value to reset character rotation after aerial jump animation is done playing
 	void Internal_UpdateRotation();
 
+	//Returns the max jump height of the main character
+	float Internal_GetCharacterMaxJumpHeight();
+
+	float OriginalZValue = GetActorLocation().Z;
+
+	FVector HitBoxLocation;
+
+	float HitBoxSize = 32;
+
 public:
 	AStreetGrudgeCharacter();
 
@@ -101,16 +110,16 @@ public:
 	UAnimMontage* AirPunchMontage;
 
 	//Attack animations
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
+	UPROPERTY(VisibleAnywhere, Category = Ability)
 	UAnimMontage* JabMontage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
+	UPROPERTY(VisibleAnywhere, Category = Ability)
 	UAnimMontage* CrossMontage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
+	UPROPERTY(VisibleAnywhere, Category = Ability)
 	UAnimMontage* HookMontage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
+	UPROPERTY(VisibleAnywhere, Category = Ability)
 	UAnimMontage* RoundKickMontage;
 
 	//Checks if player is colliding with a wall, and on which side, enabling options for a wall jump or an off wall air punch

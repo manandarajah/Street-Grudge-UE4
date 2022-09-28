@@ -68,7 +68,12 @@ AStreetGrudgeCharacter::AStreetGrudgeCharacter()
 	//RightHandCollision->SetName("RightHand");
 	//RightHandCollision->SetupAttachment(RootComponent);
 
+	HitBoxLocation = FVector(70, 0, 0);
+
 	HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit Box Component"));
+	HitBox->SetRelativeLocation(HitBoxLocation);
+	HitBox->SetRelativeScale3D(FVector(1, 1, 3));
+	HitBox->InitBoxExtent(FVector(HitBoxSize));
 	HitBox->SetupAttachment(RootComponent);
 
 	//OnActorBeginOverlap.AddDynamic(this, &AStreetGrudgeCharacter::PunchHit);
@@ -148,8 +153,8 @@ void AStreetGrudgeCharacter::Internal_DetectSideCollision() {
 	Internal_SetLeftRightSideRaycast(Hit);
 	Internal_ResetLeftRightSideCollision(Hit);
 
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0, FColor::Blue, FString::Printf(TEXT("Right Side Collide: %d\nLeft Side Collide: %d\nJump Velocity: %d"), RightSideCollide,
-		LeftSideCollide, _JumpVelocity));
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0, FColor::Blue, FString::Printf(TEXT("Right Side Collide: %d\nLeft Side Collide: %d\nJump Velocity: %d\nChar with Jump Height: %f"), RightSideCollide,
+		LeftSideCollide, _JumpVelocity, OriginalZValue + GetCharacterMovement()->GetMaxJumpHeight()));
 }
 
 void AStreetGrudgeCharacter::Internal_SetLeftRightSideRaycast(FHitResult& Hit) {
@@ -182,9 +187,12 @@ void AStreetGrudgeCharacter::Internal_ResetLeftRightSideCollision(FHitResult& Hi
 
 //Override unreal jump function to simulate normal jump and to allow an interrupt so jump can
 void AStreetGrudgeCharacter::Jump() {
+	HitBox->SetBoxExtent(FVector(HitBoxSize + 30));
+	HitBoxLocation.Z = -40;
+	HitBox->SetRelativeLocation(HitBoxLocation);
 
 	//Determines weather to jump or wall jump
-	if (_JumpCount == 0 || (CanWallJump && _JumpCount > 0 && _JumpCount < 2)) {
+	if ((_JumpCount == 0 || (CanWallJump && _JumpCount > 0 && _JumpCount < 2))) {
 		FVector ZVelocity(0, 0, GetCharacterMovement()->JumpZVelocity);
 
 		//Checks if character is jumping to simulate a wall jump
@@ -201,6 +209,10 @@ void AStreetGrudgeCharacter::Jump() {
 		++_JumpCount;
 	}
 
+}
+
+float AStreetGrudgeCharacter::Internal_GetCharacterMaxJumpHeight() {
+	return OriginalZValue + GetCharacterMovement()->GetMaxJumpHeight() - 100;
 }
 
 //Calculates wall jump direction based on character rotation and left/right collision detection
@@ -242,7 +254,13 @@ void AStreetGrudgeCharacter::Landed(const FHitResult& Hit) {
 	Super::Landed(Hit);
 
 	CanWallJump = false;
+	OriginalZValue = GetActorLocation().Z;
+	HitBox->SetBoxExtent(FVector(HitBoxSize));
+	HitBoxLocation.Z = -40;
+	HitBox->SetRelativeLocation(HitBoxLocation);
 	_JumpCount = 0;
+
+	UE_LOG(LogTemp, Log, TEXT("CanWallJump %d"), CanWallJump);
 }
 
 void AStreetGrudgeCharacter::TurnAtRate(float Rate)
@@ -290,7 +308,7 @@ void AStreetGrudgeCharacter::MoveRight(float Value)
 void AStreetGrudgeCharacter::Punch() {
 	_CanPunch = true;
 	
-	if (CanWallJump && _JumpCount > 0 && _JumpCount < 2) {
+	if (CanWallJump && _JumpCount > 0 && _JumpCount < 2 && GetActorLocation().Z >= Internal_GetCharacterMaxJumpHeight()) {
 		Internal_UpdateRotation();
 
 		FVector ZVelocity(0, 0, 0);
@@ -302,7 +320,7 @@ void AStreetGrudgeCharacter::Punch() {
 		LaunchCharacter(ZVelocity, false, true);
 	}
 
-	else if (_Index == -1) PunchCombo();
+	else if (_Index == -1 && !CanWallJump) PunchCombo();
 }
 
 void AStreetGrudgeCharacter::Internal_UpdateRotation() {

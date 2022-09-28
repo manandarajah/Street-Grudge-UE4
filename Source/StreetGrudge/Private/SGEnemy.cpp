@@ -73,19 +73,22 @@ void ASGEnemy::ChangeState(APawn* SeenPawn) {
 	_EnemyState = SGAIState::Alert;
 }
 
-void ASGEnemy::ApplyHit(int Index) {
+void ASGEnemy::ApplyHit(int Index, bool IsInAir) {
 	
 	if (_IsInPlayerRange) {
 
-		switch (Index) {
-		case 2:
-			PlayAnimMontage(SideFaceHit);
-			break;
-		case 3:
-			PlayAnimMontage(RibHit);
-			break;
-		default:
-			PlayAnimMontage(FaceHit);
+		if (IsInAir) PlayAnimMontage(AerialHit);
+		else {
+			switch (Index) {
+			case 2:
+				PlayAnimMontage(SideFaceHit);
+				break;
+			case 3:
+				PlayAnimMontage(RibHit);
+				break;
+			default:
+				PlayAnimMontage(FaceHit);
+			}
 		}
 	}
 }
