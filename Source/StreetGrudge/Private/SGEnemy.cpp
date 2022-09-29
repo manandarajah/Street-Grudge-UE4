@@ -46,7 +46,7 @@ void ASGEnemy::Internal_MoveEnemy() {
 	if (_EnemyState == SGAIState::Alert) {
 		_IsMoving = true;
 
-		_AICont->MoveToActor(_Target, 130);
+		_AICont->MoveToActor(_Target, 20);
 
 		if (_AICont->GetMoveStatus() == EPathFollowingStatus::Idle) _EnemyState = SGAIState::Idle;
 
