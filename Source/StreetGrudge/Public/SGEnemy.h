@@ -40,24 +40,60 @@ private:
 
 	AAIController* _AICont;
 
-	bool _IsMoving = false, _IsInPlayerRange = false;
+	bool _IsMoving = false, _IsInPlayerRange = false, _CanPunch = false;
 
+	int _Index = -1;
+
+	//Set AI component configuration
 	void Internal_SetAIConfig();
-	void Internal_MoveEnemy();
+
+	//Handles enemy movement
+	void Internal_Move();
 
 public:
 
-	UPROPERTY(VisibleAnywhere, Category = "Enemy")
+	UPROPERTY(VisibleAnywhere, Category = "HitReact")
 	UAnimMontage* FaceHit;
 
-	UPROPERTY(VisibleAnywhere, Category = "Enemy")
+	UPROPERTY(VisibleAnywhere, Category = "HitReact")
 	UAnimMontage* SideFaceHit;
 
-	UPROPERTY(VisibleAnywhere, Category = "Enemy")
+	UPROPERTY(VisibleAnywhere, Category = "HitReact")
 	UAnimMontage* RibHit;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enemy")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HitReact")
 	UAnimMontage* AerialHit;
+
+	UPROPERTY(VisibleAnywhere, Category = "Ability")
+	UAnimMontage* Jab;
+
+	UPROPERTY(VisibleAnywhere, Category = "Ability")
+	UAnimMontage* Cross;
+
+	UPROPERTY(VisibleAnywhere, Category = "Ability")
+	UAnimMontage* Knee;
+
+	//Checks weather player is attacking or not, rendering it unable to move if true
+	UFUNCTION(BlueprintPure, Category = Ability)
+	bool IsPunching();
+
+	//End the punch combos at anypoint depending on player input
+	UFUNCTION(BlueprintCallable, Category = Ability)
+	void EndPunch();
+
+	UFUNCTION(BlueprintCallable, Category = Ability)
+	void Punch();
+
+	//Called when player presses the punch button, handling the punch combo system. Currently evoked in blueprints
+	UFUNCTION(BlueprintCallable, Category = Ability)
+	void PunchCombo();
+
+	//Called when player is done attacking, called through the end of each attack animation
+	UFUNCTION(BlueprintCallable, Category = Ability)
+	void StopPunch();
+
+	UFUNCTION(BlueprintPure, Category = Ability)
+	int GetPunchIndex();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -75,4 +111,5 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Enemy")
 	void ApplyHit(int Index, bool IsInAir);
+
 };

@@ -360,7 +360,11 @@ void AStreetGrudgeCharacter::Internal_EnemyInRangeHandler(AActor* OtherActor, bo
 
 	ASGEnemy* SGEnemy = dynamic_cast<ASGEnemy*>(OtherActor);
 
-	if (SGEnemy) SGEnemy->SetInPlayerRange(IsEnemyInRange);
+	if (SGEnemy) {
+		SGEnemy->SetInPlayerRange(IsEnemyInRange);
+
+		if (!this->_CanPunch) SGEnemy->Punch();
+	}
 }
 
 void AStreetGrudgeCharacter::EnemyInRange(AActor* OverlappedActor, AActor* OtherActor) {

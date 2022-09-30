@@ -34,7 +34,7 @@ void ASGEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Internal_MoveEnemy();
+	Internal_Move();
 }
 
 void ASGEnemy::Internal_SetAIConfig() {
@@ -42,7 +42,7 @@ void ASGEnemy::Internal_SetAIConfig() {
 	_AICont->Possess(this);
 }
 
-void ASGEnemy::Internal_MoveEnemy() {
+void ASGEnemy::Internal_Move() {
 	if (_EnemyState == SGAIState::Alert) {
 		_IsMoving = true;
 
@@ -75,7 +75,7 @@ void ASGEnemy::ChangeState(APawn* SeenPawn) {
 
 void ASGEnemy::ApplyHit(int Index, bool IsInAir) {
 	
-	if (_IsInPlayerRange) {
+	if (this->_IsInPlayerRange) {
 
 		if (IsInAir) PlayAnimMontage(AerialHit);
 		else {
@@ -95,4 +95,50 @@ void ASGEnemy::ApplyHit(int Index, bool IsInAir) {
 
 void ASGEnemy::SetInPlayerRange(bool InPlayerRange) {
 	_IsInPlayerRange = InPlayerRange;
+}
+
+void ASGEnemy::Punch() {
+
+	if (_IsInPlayerRange) {
+		_CanPunch = true;
+
+		if (_Index == -1) PunchCombo();
+	}
+}
+
+void ASGEnemy::PunchCombo() {
+	++_Index;
+
+	if (Jab == nullptr || Cross == nullptr || Knee == nullptr) return;
+
+	switch (_Index) {
+	case 0:
+		PlayAnimMontage(Jab, 1.3f);
+		break;
+	case 1:
+		PlayAnimMontage(Cross, 1.3f);
+		break;
+	case 2:
+		PlayAnimMontage(Knee, 1.3f);
+		break;
+	}
+}
+
+//End the punch combos at anypoint depending on player input
+void ASGEnemy::EndPunch() {
+	_Index = -1;
+}
+
+//Checks weather player is attacking or not, rendering it unable to move if true
+bool ASGEnemy::IsPunching() {
+	return _CanPunch;
+}
+
+int ASGEnemy::GetPunchIndex() {
+	return _Index;
+}
+
+//Called when player is done attacking, called through the end of each attack animation
+void ASGEnemy::StopPunch() {
+	_CanPunch = false;
 }

@@ -140,19 +140,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	//Checks weather player is attacking or not, rendering it unable to move if true
-	UFUNCTION(BlueprintPure, Category=Ability)
-	bool IsPunching();
-
 	//Invoked from the punch input button, decides to simulate punch combos or aerial punch
 	void Punch();
 
-	//Called when player hands are colliding with actor
-	UFUNCTION()
-	void EnemyInRange(AActor* OverlappedActor, AActor* OtherActor);
-
-	UFUNCTION()
-	void EnemyOutOfRange(AActor* OverlappedActor, AActor* OtherActor);
+	//Checks weather player is attacking or not, rendering it unable to move if true
+	UFUNCTION(BlueprintPure, Category = Ability)
+	bool IsPunching();
 
 	//End the punch combos at anypoint depending on player input
 	UFUNCTION(BlueprintCallable, Category = Ability)
@@ -163,11 +156,18 @@ public:
 	void PunchCombo();
 
 	//Called when player is done attacking, called through the end of each attack animation
-	UFUNCTION(BlueprintCallable, Category=Ability)
+	UFUNCTION(BlueprintCallable, Category = Ability)
 	void StopPunch();
 
 	UFUNCTION(BlueprintPure, Category = Ability)
 	int GetPunchIndex();
+
+	//Called when player hands are colliding with actor
+	UFUNCTION()
+	void EnemyInRange(AActor* OverlappedActor, AActor* OtherActor);
+
+	UFUNCTION()
+	void EnemyOutOfRange(AActor* OverlappedActor, AActor* OtherActor);
 
 protected:
 
