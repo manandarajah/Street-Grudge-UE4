@@ -260,7 +260,7 @@ void AStreetGrudgeCharacter::Landed(const FHitResult& Hit) {
 	HitBox->SetRelativeLocation(HitBoxLocation);
 	_JumpCount = 0;
 
-	UE_LOG(LogTemp, Log, TEXT("CanWallJump %d"), CanWallJump);
+	//UE_LOG(LogTemp, Log, TEXT("CanWallJump %d"), CanWallJump);
 }
 
 void AStreetGrudgeCharacter::TurnAtRate(float Rate)

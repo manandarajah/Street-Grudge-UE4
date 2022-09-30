@@ -50,7 +50,7 @@ void ASGEnemy::Internal_Move() {
 
 		if (_AICont->GetMoveStatus() == EPathFollowingStatus::Idle) _EnemyState = SGAIState::Idle;
 
-		UE_LOG(LogTemp, Log, TEXT("_Target: %s"), *_Target->GetName());
+		//UE_LOG(LogTemp, Log, TEXT("_Target: %s"), *_Target->GetName());
 	}
 
 	else
@@ -77,6 +77,9 @@ void ASGEnemy::ApplyHit(int Index, bool IsInAir) {
 	
 	if (this->_IsInPlayerRange) {
 
+		if (_Index >= 0) EndPunch();
+		if (_CanPunch) StopPunch();
+
 		if (IsInAir) PlayAnimMontage(AerialHit);
 		else {
 			switch (Index) {
@@ -100,6 +103,7 @@ void ASGEnemy::SetInPlayerRange(bool InPlayerRange) {
 void ASGEnemy::Punch() {
 
 	if (_IsInPlayerRange) {
+		//UE_LOG(LogTemp, Log, TEXT("Something is wrong here, Index: %d"), _Index);
 		_CanPunch = true;
 
 		if (_Index == -1) PunchCombo();
