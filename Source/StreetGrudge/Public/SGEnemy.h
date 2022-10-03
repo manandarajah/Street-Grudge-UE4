@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CombatAbilityInterface.h"
 #include "SGEnemy.generated.h"
 
 class UPawnSensingComponent;
@@ -18,7 +19,7 @@ enum class SGAIState : uint8 {
 };
 
 UCLASS()
-class STREETGRUDGE_API ASGEnemy : public ACharacter
+class STREETGRUDGE_API ASGEnemy : public ACharacter, public ICombatAbilityInterface
 {
 	GENERATED_BODY()
 

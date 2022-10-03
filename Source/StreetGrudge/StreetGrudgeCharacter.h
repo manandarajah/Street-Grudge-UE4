@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Public/CombatAbilityInterface.h"
 #include "StreetGrudgeCharacter.generated.h"
 
 class UAnimMontage;
@@ -12,7 +13,7 @@ class UBoxComponent;
 class UHandComponent;
 
 UCLASS(config=Game)
-class AStreetGrudgeCharacter : public ACharacter
+class AStreetGrudgeCharacter : public ACharacter, public ICombatAbilityInterface
 {
 	GENERATED_BODY()
 
