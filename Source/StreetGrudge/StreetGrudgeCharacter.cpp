@@ -211,10 +211,6 @@ void AStreetGrudgeCharacter::Jump() {
 
 }
 
-float AStreetGrudgeCharacter::Internal_GetCharacterMaxJumpHeight() {
-	return OriginalZValue + GetCharacterMovement()->GetMaxJumpHeight() - 100;
-}
-
 //Calculates wall jump direction based on character rotation and left/right collision detection
 void AStreetGrudgeCharacter::Internal_GetJumpDirection(FVector &Vector) {
 
@@ -325,6 +321,10 @@ void AStreetGrudgeCharacter::Punch() {
 	}
 
 	else if (_Index == -1 && !CanWallJump) PunchCombo();
+}
+
+float AStreetGrudgeCharacter::Internal_GetCharacterMaxJumpHeight() {
+	return OriginalZValue + GetCharacterMovement()->GetMaxJumpHeight() - 100;
 }
 
 void AStreetGrudgeCharacter::Internal_UpdateRotation() {
