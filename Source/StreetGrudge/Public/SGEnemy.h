@@ -76,25 +76,25 @@ public:
 
 	//Checks weather player is attacking or not, rendering it unable to move if true
 	UFUNCTION(BlueprintPure, Category = Ability)
-	bool IsPunching();
+	virtual bool IsPunching() override;
 
 	//End the punch combos at anypoint depending on player input
 	UFUNCTION(BlueprintCallable, Category = Ability)
-	void EndPunch();
+	virtual void EndPunch() override;
 
 	UFUNCTION(BlueprintCallable, Category = Ability)
-	void Punch();
+	virtual void Punch() override;
 
 	//Called when player presses the punch button, handling the punch combo system. Currently evoked in blueprints
 	UFUNCTION(BlueprintCallable, Category = Ability)
-	void PunchCombo();
+	virtual void PunchCombo() override;
 
 	//Called when player is done attacking, called through the end of each attack animation
 	UFUNCTION(BlueprintCallable, Category = Ability)
-	void StopPunch();
+	virtual void StopPunch() override;
 
 	UFUNCTION(BlueprintPure, Category = Ability)
-	int GetPunchIndex();
+	virtual int GetPunchIndex() override;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
