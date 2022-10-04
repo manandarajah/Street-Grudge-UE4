@@ -176,7 +176,7 @@ public:
 	UFUNCTION()
 	void EnemyOutOfRange(AActor* OverlappedActor, AActor* OtherActor);
 
-	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	UFUNCTION(BlueprintCallable, Category = "Player")
 	void ApplyHit(ACharacter* Char);
 
 	bool IsJumping();
