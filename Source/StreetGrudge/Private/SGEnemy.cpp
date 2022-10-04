@@ -78,7 +78,7 @@ void ASGEnemy::ApplyHit(ACharacter* Char) {
 	if (Char->GetName().Contains("ThirdPersonCharacter")) {
 		AStreetGrudgeCharacter* SGC = dynamic_cast<AStreetGrudgeCharacter*>(Char);
 
-		if (this->_IsInPlayerRange) {
+		if (SGC && this->_IsInPlayerRange) {
 
 			if (_Index >= 0) EndPunch();
 			if (_CanPunch) StopPunch();

@@ -365,7 +365,7 @@ void AStreetGrudgeCharacter::ApplyHit(ACharacter* Char) {
 	if (Char->GetName().Contains("BP_Enemy")) {
 		ASGEnemy* SGE = dynamic_cast<ASGEnemy*>(Char);
 
-		if (SGE->IsInPlayerRange()) {
+		if (SGE && SGE->IsInPlayerRange()) {
 
 			switch (SGE->GetPunchIndex()) {
 			case 2:
