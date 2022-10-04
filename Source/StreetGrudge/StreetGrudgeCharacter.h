@@ -123,6 +123,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Ability)
 	UAnimMontage* RoundKickMontage;
 
+	UPROPERTY(VisibleAnywhere, Category = "HitReact")
+	UAnimMontage* FaceHit;
+
+	UPROPERTY(VisibleAnywhere, Category = "HitReact")
+	UAnimMontage* StomachHit;
+
 	//Checks if player is colliding with a wall, and on which side, enabling options for a wall jump or an off wall air punch
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Ability)
 	bool CanWallJump = false;
@@ -169,6 +175,11 @@ public:
 
 	UFUNCTION()
 	void EnemyOutOfRange(AActor* OverlappedActor, AActor* OtherActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	void ApplyHit(ACharacter* Char);
+
+	bool IsJumping();
 
 protected:
 

@@ -110,7 +110,9 @@ public:
 
 	void SetInPlayerRange(bool InPlayerRange);
 
+	bool IsInPlayerRange();
+
 	UFUNCTION(BlueprintCallable, Category="Enemy")
-	void ApplyHit(int Index, bool IsInAir);
+	void ApplyHit(ACharacter* Char);
 
 };

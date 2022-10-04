@@ -249,6 +249,10 @@ void AStreetGrudgeCharacter::Internal_GetJumpDirection(FVector &Vector) {
 	}
 }
 
+bool AStreetGrudgeCharacter::IsJumping() {
+	return _JumpCount > 0;
+}
+
 //Resets jump configurations when player hits the ground
 void AStreetGrudgeCharacter::Landed(const FHitResult& Hit) {
 	Super::Landed(Hit);
@@ -354,6 +358,24 @@ void AStreetGrudgeCharacter::PunchCombo() {
 //Called when player is done attacking, called through the end of each attack animation
 void AStreetGrudgeCharacter::StopPunch() {
 	_CanPunch = false;
+}
+
+void AStreetGrudgeCharacter::ApplyHit(ACharacter* Char) {
+
+	if (Char->GetName().Contains("BP_Enemy")) {
+		ASGEnemy* SGE = dynamic_cast<ASGEnemy*>(Char);
+
+		if (SGE->IsInPlayerRange()) {
+
+			switch (SGE->GetPunchIndex()) {
+			case 2:
+				PlayAnimMontage(StomachHit);
+				break;
+			default:
+				PlayAnimMontage(FaceHit);
+			}
+		}
+	}
 }
 
 void AStreetGrudgeCharacter::Internal_EnemyInRangeHandler(AActor* OtherActor, bool IsEnemyInRange) {

@@ -37,4 +37,6 @@ public:
 	void StopPunch();
 
 	int GetPunchIndex();
+
+	void ApplyHit(ACharacter* Char);
 };

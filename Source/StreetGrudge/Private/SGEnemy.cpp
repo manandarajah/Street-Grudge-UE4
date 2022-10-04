@@ -73,24 +73,28 @@ void ASGEnemy::ChangeState(APawn* SeenPawn) {
 	_EnemyState = SGAIState::Alert;
 }
 
-void ASGEnemy::ApplyHit(int Index, bool IsInAir) {
-	
-	if (this->_IsInPlayerRange) {
+void ASGEnemy::ApplyHit(ACharacter* Char) {
 
-		if (_Index >= 0) EndPunch();
-		if (_CanPunch) StopPunch();
+	if (Char->GetName().Contains("ThirdPersonCharacter")) {
+		AStreetGrudgeCharacter* SGC = dynamic_cast<AStreetGrudgeCharacter*>(Char);
 
-		if (IsInAir) PlayAnimMontage(AerialHit);
-		else {
-			switch (Index) {
-			case 2:
-				PlayAnimMontage(SideFaceHit);
-				break;
-			case 3:
-				PlayAnimMontage(RibHit);
-				break;
-			default:
-				PlayAnimMontage(FaceHit);
+		if (this->_IsInPlayerRange) {
+
+			if (_Index >= 0) EndPunch();
+			if (_CanPunch) StopPunch();
+
+			if (SGC->IsJumping()) PlayAnimMontage(AerialHit);
+			else {
+				switch (SGC->GetPunchIndex()) {
+				case 2:
+					PlayAnimMontage(SideFaceHit);
+					break;
+				case 3:
+					PlayAnimMontage(RibHit);
+					break;
+				default:
+					PlayAnimMontage(FaceHit);
+				}
 			}
 		}
 	}
@@ -98,6 +102,10 @@ void ASGEnemy::ApplyHit(int Index, bool IsInAir) {
 
 void ASGEnemy::SetInPlayerRange(bool InPlayerRange) {
 	_IsInPlayerRange = InPlayerRange;
+}
+
+bool ASGEnemy::IsInPlayerRange() {
+	return _IsInPlayerRange;
 }
 
 void ASGEnemy::Punch() {
